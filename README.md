@@ -16,4 +16,7 @@ PlayIt Firewall:
 ```
 This ensures only OnRender can access it, and we can proxy to and from PlayIt, and therefore our servers accordingly.
 
+> [!CAUTION]
+> Unfortunately by doing this, you will be increasing latency for your users by a lot, for me I am getting approximately 400ms to download a webpage, because there are 2 reverse proxies, this will create extreme latency especially when your servers are across the country. You should be reasonably close to OnRender/PlayIt servers to increase latency.
+
 -# For those of you who want to visit the website, it is firewalled.
