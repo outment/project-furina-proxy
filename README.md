@@ -6,7 +6,9 @@ Host <--> PlayIt (FireWalled) <--> OnRender <--> Public Internet
 
 Essentially, we can firewall PlayIt to only allow access from OnRender IP addresses since they are static. This allows us to essentially only allow traffic coming from OnRender directly to PlayIt.
 
-PlayIt Firewall:
+## FIREWALL CONFIGURATION
+> [!IMPORTANT]
+> The first 3 IP addresses are subject to change, you need to check OnRender to see what static Outbound IP address they use!
 ```
 35.160.120.126/32 allow
 44.233.151.27/32 allow
