@@ -8,11 +8,7 @@ function createProxyAgent(req) {
   return new http.Agent({
     createConnection: (options, callback) => {
       const socket = net.connect(options, () => {
-        const sourceAddress = req.connection.remoteAddress
-        const sourcePort = req.connection.remotePort
-        const destAddress = socket.localAddress
-        const destPort = socket.localPort
-        const header = `PROXY TCP4 ${sourceAddress} ${destAddress} ${sourcePort} ${destPort}\r\n`
+        const header = `PROXY TCP4 ${req.connection.remoteAddress} ${options.host} ${req.connection.remotePort} ${options.port}\r\n`
         socket.write(header, () => callback(null, socket))
       })
     }
