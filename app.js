@@ -18,7 +18,7 @@ function createProxyAgent(req) {
 const proxy = httpProxy.createProxyServer({})
 
 http.createServer((req, res) => {
-  const targetUrl = 'http://147.185.221.25:33187/' + req.url
+  const targetUrl = 'http://147.185.221.25:33187' + req.url
   const agent = createProxyAgent(req)
   proxy.web(req, res, { target: targetUrl, agent })
 }).listen(PORT, () => console.log(`Project Furina Reverse Proxy is now active on port ${PORT}.`))
