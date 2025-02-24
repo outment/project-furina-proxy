@@ -24,4 +24,7 @@ This ensures only OnRender can access it, and we can proxy to and from PlayIt, a
 > [!NOTE]
 > For those of you who want to visit the website, it is firewalled.
 
+## REPOSITORY ACTIVITY
+![Alt](https://repobeats.axiom.co/api/embed/bdfbfd4a12fb31942116f13ca1c13dcdc64fffa7.svg "Repobeats analytics image")
+
 Thanks for checking out my 11 PM coding session that took me about 10 minutes to make.
