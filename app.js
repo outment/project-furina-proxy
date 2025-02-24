@@ -1,8 +1,10 @@
 const net = require('net')
 const http = require('http')
+const fs = require('fs')
 const httpProxy = require('http-proxy')
 
 const PORT = process.env.PORT || 3000
+const errorPage = fs.readFileSync('503.html', 'utf8')
 
 function createProxyAgent(req) {
   return new http.Agent({
@@ -16,6 +18,13 @@ function createProxyAgent(req) {
 }
 
 const proxy = httpProxy.createProxyServer({})
+
+proxy.on('error', (err, req, res) => {
+  if (res) {
+    if (!res.headersSent) res.writeHead(503, { 'Content-Type': 'text/html' })
+    res.end(errorPage)
+  }
+})
 
 const server = http.createServer((req, res) => {
   const targetUrl = 'http://147.185.221.25:33187'
