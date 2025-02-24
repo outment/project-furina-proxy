@@ -27,6 +27,11 @@ proxy.on('error', (err, req, res) => {
 })
 
 const server = http.createServer((req, res) => {
+  if (req.url === '/pfprxy/health') {
+    res.writeHead(200, { 'Content-Type': 'text/plain' })
+    res.end('OK')
+    return
+  }
   const targetUrl = 'http://147.185.221.25:33187'
   const agent = createProxyAgent(req)
   proxy.web(req, res, { target: targetUrl, agent })
