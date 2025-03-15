@@ -32,13 +32,13 @@ const server = http.createServer((req, res) => {
     res.end('OK')
     return
   }
-  const targetUrl = 'http://147.185.221.25:33187'
+  const targetUrl = process.env.PROXIEDADDRESS
   const agent = createProxyAgent(req)
   proxy.web(req, res, { target: targetUrl, agent })
 })
 
 server.on('upgrade', (req, socket, head) => {
-  const targetUrl = 'http://147.185.221.25:33187'
+  const targetUrl = process.env.PROXIEDADDRESS
   const agent = createProxyAgent(req)
   proxy.ws(req, socket, head, { target: targetUrl, agent })
 })
