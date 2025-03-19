@@ -9,7 +9,6 @@ function createProxyAgent(req) {
   return new http.Agent({
     createConnection: (options, callback) => {
       const socket = net.connect(options, () => {
-        // Use req.socket if available (modern Node) otherwise fallback to req.connection.
         const remoteAddress = req.socket ? req.socket.remoteAddress : req.connection.remoteAddress;
         const remotePort = req.socket ? req.socket.remotePort : req.connection.remotePort;
         const header = `PROXY TCP4 ${remoteAddress} ${options.host} ${remotePort} ${options.port}\r\n`;
@@ -23,11 +22,14 @@ function createProxyAgent(req) {
 const proxy = httpProxy.createProxyServer({});
 
 proxy.on('error', (err, req, res) => {
-  if (res) {
-    if (!res.headersSent) {
-      res.writeHead(503, { 'Content-Type': 'text/html' });
-    }
-    res.end(`<!DOCTYPE html>
+  console.error("Proxy encountered an error:", err);
+
+  if (res && typeof res.writeHead === 'function') {
+    try {
+      if (!res.headersSent) {
+        res.writeHead(503, { 'Content-Type': 'text/html' });
+      }
+      res.end(`<!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8">
@@ -47,7 +49,7 @@ proxy.on('error', (err, req, res) => {
   <div class="container">
     <div class="endpoint">
       <h1>Proxy Route Failure</h1>
-      <p class="request-method">GET /${req.url}</p>
+      <p class="request-method">${req.method} ${req.url}</p>
       <p>PFPRXY failed to connect to Project Furina Servers.</p>
       <h2>Further Information</h2>
       <div class="response">
@@ -59,6 +61,13 @@ proxy.on('error', (err, req, res) => {
   </div>
 </body>
 </html>`);
+    } catch (writeErr) {
+      console.error("Error writing error response:", writeErr);
+    }
+  } else {
+    if (req.socket && req.socket.writable) {
+      req.socket.end();
+    }
   }
 });
 
