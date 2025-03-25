@@ -4,6 +4,7 @@ const fs = require('fs');
 const httpProxy = require('http-proxy');
 
 const PORT = process.env.PORT || 3000;
+const ALLOWED_HOST = 'project-furina.sytes.net';
 
 function createProxyAgent(req) {
   return new http.Agent({
@@ -72,27 +73,44 @@ proxy.on('error', (err, req, res) => {
 });
 
 const server = http.createServer((req, res) => {
+  const hostHeader = req.headers.host || '';
+  if (!hostHeader.includes(ALLOWED_HOST)) {
+    res.writeHead(405, { 'Content-Type': 'text/plain' });
+    res.end('Method Not Allowed: You are not permitted to access this end-point. Please use https://project-furina.sytes.net/');
+    return;
+  }
+  
   if (req.url === '/pfprxy/health') {
     res.writeHead(200, { 'Content-Type': 'text/plain' });
     res.end('OK');
     return;
   }
+  
   const targetUrl = process.env.PROXIEDADDRESS;
   if (!targetUrl) {
     res.writeHead(500, { 'Content-Type': 'text/plain' });
     res.end('PROXIEDADDRESS is not set.');
     return;
   }
+  
   const agent = createProxyAgent(req);
   proxy.web(req, res, { target: targetUrl, agent });
 });
 
 server.on('upgrade', (req, socket, head) => {
+  const hostHeader = req.headers.host || '';
+  if (!hostHeader.includes(ALLOWED_HOST)) {
+    socket.write('HTTP/1.1 405 Method Not Allowed\r\n\r\n');
+    socket.destroy();
+    return;
+  }
+  
   const targetUrl = process.env.PROXIEDADDRESS;
   if (!targetUrl) {
     socket.end('HTTP/1.1 500 Internal Server Error\r\n\r\n');
     return;
   }
+  
   const agent = createProxyAgent(req);
   proxy.ws(req, socket, head, { target: targetUrl, agent });
 });
