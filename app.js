@@ -30,35 +30,104 @@ proxy.on('error', (err, req, res) => {
       if (!res.headersSent) {
         res.writeHead(503, { 'Content-Type': 'text/html' });
       }
+      // req.method req.url
       res.end(`<!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Proxy Route Failure</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Service Unavailable</title>
+  <meta name="description" content="The requested page is not available at the moment.">
+  <meta name="keywords" content="503, Service Unavailable, Error">
+  <meta name="author" content="Project Furina">
+  <meta property="og:title" content="Project Furina" />
+  <meta property="og:description" content="The requested page is not available at the moment." />
+  <meta property="og:image" content="https://project-furina.sytes.net/publiccdn/furina.png" />
+  <meta property="og:url" content="https://project-furina.sytes.net" />
+  <link rel="icon" href="/cdn/favicon.ico">
   <style>
-    body { font-family: Arial, sans-serif; background-color: #f4f4f4; margin: 0; padding: 0; color: #333; }
-    .container { padding: 2rem; }
-    h1, h2 { color: #007bff; }
-    .endpoint { background-color: #fff; border: 1px solid #ddd; margin: 1rem 0; padding: 1rem; border-radius: 4px; }
-    .endpoint code { background-color: #f4f4f4; padding: 0.2rem; border-radius: 4px; }
-    .request-method { font-weight: bold; color: #333; }
-    .response { background-color: #f8f9fa; padding: 1rem; margin-top: 1rem; border-radius: 4px; }
+    body {
+      margin: 0;
+      padding: 0;
+      background-color: #121212;
+      color: #e0e0e0;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 100vh;
+      text-align: center;
+    }
+    
+    .container {
+      max-width: 600px;
+      padding: 2rem;
+      background: #1e1e1e;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.5);
+      border-radius: 8px;
+    }
+    
+    .icon {
+      font-size: 80px;
+      color: #FF5722;
+      margin-bottom: 1rem;
+    }
+    
+    h1 {
+      font-size: 48px;
+      margin: 0;
+      color: #ffffff;
+    }
+    
+    h2 {
+      font-size: 24px;
+      margin: 0.5rem 0 1.5rem;
+      color: #cccccc;
+    }
+    
+    p {
+      font-size: 16px;
+      line-height: 1.5;
+      color: #b0b0b0;
+      margin-bottom: 1.5rem;
+    }
+    
+    a {
+      color: #4dabf7;
+      text-decoration: none;
+      font-weight: 500;
+    }
+    
+    a:hover {
+      text-decoration: underline;
+    }
+
+    @keyframes flash {
+        0%,
+        100% {
+            opacity: 1;
+        }
+
+        50% {
+            opacity: 0.5;
+        }
+    }
   </style>
 </head>
 <body>
   <div class="container">
-    <div class="endpoint">
-      <h1>Proxy Route Failure</h1>
-      <p class="request-method">${req.method} ${req.url}</p>
-      <p>PFPRXY failed to connect to Project Furina Servers.</p>
-      <h2>Further Information</h2>
-      <div class="response">
-        <pre>Project Furina Proxy attempted to connect to the target machine, but the target machine did not respond in a timely manner.</pre>
-        <pre>ERROR: PFPRXY_CONNECTION_TIMEOUT</pre>
-      </div>
-      <i>PFPRXY encountered a connection error, therefore you are not able to access this website at the moment.</i>
-    </div>
+    <div class="icon" style="animation: flash 1.5s infinite;">&#9888;</div>
+    <h1>503</h1>
+    <h2>Service Unavailable</h2>
+    <p>
+      Project Furina Proxy failed to establish a connection to Project Furina Servers.
+    </p>
+    <p>
+      Request Information: ${req.method} ${req.url}
+    </p>
+    <p>
+      In the mean time, please refresh, try again later, or <a href="https://project-furina.statuspage.io/">check our status page.</a>.
+    </p>
   </div>
 </body>
 </html>`);
