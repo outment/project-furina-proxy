@@ -126,7 +126,7 @@ proxy.on('error', (err, req, res) => {
       Request Information: ${req.method} ${req.url}
     </p>
     <p>
-      In the mean time, please refresh, try again later, or <a href="https://project-furina.statuspage.io/">check our status page.</a>.
+      In the mean time, please refresh, try again later, or <a href="https://project-furina.statuspage.io/">check our status page</a>.
     </p>
   </div>
 </body>
